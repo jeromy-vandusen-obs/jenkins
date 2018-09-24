@@ -13,19 +13,19 @@ pipeline {
 
     environment {
         IMAGE_NAME = 'jvandusen/jenkins'
-        JENKINS_VERSION = '2.138.1'
+        IMAGE_VERSION = '1.0.0'
     }
     
     stages {
         stage('Build Image') {
             steps {
-                sh "docker build -t $IMAGE_NAME:$JENKINS_VERSION -t $IMAGE_NAME:latest ."
+                sh "docker build -t $IMAGE_NAME:$IMAGE_VERSION -t $IMAGE_NAME:latest ."
             }
         }
         stage('Push Image') {
             steps {
                 withDockerRegistry([url: '', credentialsId: 'DOCKER_HUB_CREDENTIALS']) {
-                    sh "docker push $IMAGE_NAME:$JENKINS_VERSION"
+                    sh "docker push $IMAGE_NAME:$IMAGE_VERSION"
                     sh "docker push $IMAGE_NAME:latest"
                 }
             }
@@ -33,10 +33,10 @@ pipeline {
     }
     post {
         success {
-            slackSend ":information_source: <$env.BUILD_URL|$env.JOB_NAME #$env.BUILD_NUMBER>: Image $IMAGE_NAME:$JENKINS_VERSION has been built and pushed to Docker Hub."
+            slackSend ":information_source: <$env.BUILD_URL|$env.JOB_NAME #$env.BUILD_NUMBER>: Image $IMAGE_NAME:$IMAGE_VERSION has been built and pushed to Docker Hub."
         }
         failure {
-            slackSend ":fire: <$env.BUILD_URL|$env.JOB_NAME #$env.BUILD_NUMBER>: Image $IMAGE_NAME:$JENKINS_VERSION failed to build and push to Docker Hub."
+            slackSend ":fire: <$env.BUILD_URL|$env.JOB_NAME #$env.BUILD_NUMBER>: Image $IMAGE_NAME:$IMAGE_VERSION failed to build and push to Docker Hub."
         }
     }
 }

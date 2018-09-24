@@ -7,6 +7,7 @@ ENV JENKINS_PASS administrator
 
 ENV ROOT_URL http://jenkins:8080/
 
+ENV GENERATE_SEED_JOB true
 ENV SEED_JOB_NAME seed
 ENV SEED_JOB_GIT_URL https://github.com/example/seed
 

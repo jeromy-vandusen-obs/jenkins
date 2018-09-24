@@ -10,11 +10,12 @@ This is a custom Docker image for Jenkins, based on the latest version of the of
 
 ## Environment Variables
 
-* ENV ROOT_URL - The root URL for this Jenkins instance (default: http://jenkins:8080/).
-* ENV JENKINS_USER - The name of the administrator user to be created (default: administrator).
-* ENV JENKINS_PASS - The password for the administrator user to be created (default: administrator).
-* ENV SEED_JOB_NAME The name of the seed job to be created (default: seed).
-* ENV SEED_JOB_GIT_URL The URL of the Git repository containing the seed job script (default: https://github.com/example/seed).
+* ROOT_URL - The root URL for this Jenkins instance (default: http://jenkins:8080/).
+* JENKINS_USER - The name of the administrator user to be created (default: administrator).
+* JENKINS_PASS - The password for the administrator user to be created (default: administrator).
+* GENERATE_SEED_JOB - Whether or not a seed job should be generated (default: true).
+* SEED_JOB_NAME The name of the seed job to be created (default: seed).
+* SEED_JOB_GIT_URL The URL of the Git repository containing the seed job script (default: https://github.com/example/seed).
 
 ## Seed Job
 

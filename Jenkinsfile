@@ -19,9 +19,7 @@ pipeline {
     stages {
         stage('Build Image') {
             steps {
-                withDockerRegistry([url: '', credentialsId: 'DOCKER_HUB_CREDENTIALS']) {
-                    sh "docker build -t $IMAGE_NAME:$JENKINS_VERSION -t $IMAGE_NAME:latest ."
-                }
+                sh "docker build -t $IMAGE_NAME:$JENKINS_VERSION -t $IMAGE_NAME:latest ."
             }
         }
         stage('Push Image') {
@@ -35,10 +33,10 @@ pipeline {
     }
     post {
         success {
-            notify('INFO', "Image $IMAGE_NAME:$JENKINS_VERSION has been built and pushed to Docker Hub.")
+            slackSend ":information_source: <$env.BUILD_URL|$env.JOB_NAME #$env.BUILD_NUMBER>: Image $IMAGE_NAME:$JENKINS_VERSION has been built and pushed to Docker Hub."
         }
         failure {
-            notify('FAIL', "Image $IMAGE_NAME:$JENKINS_VERSION failed to build and push to Docker Hub.")
+            slackSend ":fire: <$env.BUILD_URL|$env.JOB_NAME #$env.BUILD_NUMBER>: Image $IMAGE_NAME:$JENKINS_VERSION failed to build and push to Docker Hub."
         }
     }
 }

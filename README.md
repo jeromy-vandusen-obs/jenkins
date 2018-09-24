@@ -57,3 +57,10 @@ services:
     - "./data:/var/jenkins_home"
     restart: unless-stopped
 ```
+
+## Improvements
+
+* Automatically approved seed job script.
+* Automatically configure global shared libraries.
+* Automatically configure Slack notifier settings with token secret text.
+* Automatically configure Docker Hub credentials.

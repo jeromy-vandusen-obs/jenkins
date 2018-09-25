@@ -1,4 +1,6 @@
 import jenkins.model.Jenkins
 
-Jenkins.instance.getDescriptor("jenkins.CLI").get().setEnabled(false)
-Jenkins.instance.save()
+jenkins = Jenkins.instance
+
+jenkins.getDescriptor("jenkins.CLI").get().setEnabled(false)
+jenkins.save()

@@ -1,13 +1,18 @@
 import jenkins.model.*
+import hudson.model.User
 import hudson.security.*
 
 def env = System.getenv()
 
-Jenkins.instance.setSecurityRealm(new HudsonPrivateSecurityRealm(false))
-Jenkins.instance.setAuthorizationStrategy(new GlobalMatrixAuthorizationStrategy())
+jenkins = Jenkins.instance
 
-def user = Jenkins.instance.getSecurityRealm().createAccount(env.JENKINS_USER, env.JENKINS_PASS)
-user.save()
+if (User.getById(env.JENKINS_USER, false) == null) {
+    jenkins.setSecurityRealm(new HudsonPrivateSecurityRealm(false, false, null))
+    jenkins.setAuthorizationStrategy(new GlobalMatrixAuthorizationStrategy())
 
-Jenkins.instance.getAuthorizationStrategy().add(Jenkins.ADMINISTER, env.JENKINS_USER)
-Jenkins.instance.save()
+    def user = jenkins.getSecurityRealm().createAccount(env.JENKINS_USER, env.JENKINS_PASS)
+    user.save()
+
+    jenkins.getAuthorizationStrategy().add(Jenkins.ADMINISTER, env.JENKINS_USER)
+    jenkins.save()
+}

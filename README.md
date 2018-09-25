@@ -14,12 +14,14 @@ This is a custom Docker image for Jenkins, based on the latest version of the of
 * ROOT_URL - The root URL for this Jenkins instance (default: http://jenkins:8080/).
 * JENKINS_USER - The name of the administrator user to be created (default: administrator).
 * JENKINS_PASS - The password for the administrator user to be created (default: administrator).
-* GENERATE_SEED_JOB - Whether or not a seed job should be generated (default: false).
-* SEED_JOB_NAME - The name of the seed job to be created.
-* SEED_JOB_GIT_URL - The URL of the Git repository containing the seed job script.
-* CONFIGURE_GLOBAL_LIB - Whether or not to configure global shared libraries (default: false)
-* GLOBAL_LIB_NAME - The name of the global shared library to configure. For multiple libraries, separate by commas.
-* GLOBAL_LIB_GIT_URL - The URL of the Git repository containing the global shared library. For multiple libraries, separate by commas.
+* SEED_JOBS - Comma separated list of names and URLs for any seed jobs to be created, with each entry in the format
+  "name:URL" (default: ""). If blank, no seed jobs will be created.
+* GLOBAL_SHARED_LIBRARIES - Comma separated list of names and URLs for any global shared libraries to be configured,
+  with each entry in the format "name:URL" (default: ""). If blank, no global shared libraries will be configured.
+* CREDENTIALS - Comma separated list of any credentials to be created, with each entry in the format
+  "type|id|credentials|description" (default: ""). The valid types are "UsernamePassword" and "SecretText". For credentials of
+  type "UsernamePassword", the "credentials" portion is in the format "username|password". For credentials of type
+  "SecretText", the "credentials" portion is in the format "secret". If blank, no credentials will be created.
 
 ## Seed Job
 
@@ -34,12 +36,9 @@ $ docker run -d \
              -e ROOT_URL="http://jenkins.example.com" \
              -e JENKINS_USER="admin" \
              -e JENKINS_PASS="secret" \
-             -e GENERATE_SEED_JOB="true" \
-             -e SEED_JOB_NAME="project-seed" \
-             -e SEED_JOB_GIT_URL="https://github.com/example/project-seed-job.git" \
-             -e CONFIGURE_GLOBAL_LIB="true" \
-             -e GLOBAL_LIB_NAME="project-lib" \
-             -e GLOBAL_LIB_GIT_URL="https://github.com/example/project-lib.git" \
+             -e SEED_JOBS="project-seed|https://github.com/example/project-seed-job.git" \
+             -e GLOBAL_SHARED_LIBRARIES="pipeline-lib|https://github.com/example/pipeline-lib.git,project-lib|https://github.com/example/project-lib.git" \
+             -e CREDENTIALS="UsernamePassword|GITHUB_CREDENTIALS|githubuser|P@55w0rd!|GitHub Credentials,UsernamePassword|DOCKER_HUB_CREDENTIALS|dockeruser:P@55w0rd!|Docker Hub Credentials,SecretText|SLACK_TOKEN|T0k3n|Slack Token"
              --name jenkins \
              jvandusen/jenkins:latest
 ```
@@ -57,12 +56,9 @@ services:
       ROOT_URL: http://jenkins.example.com
       JENKINS_USER: admin
       JENKINS_PASS: secret
-      GENERATE_SEED_JOB: "true"
-      SEED_JOB_NAME: project-seed
-      SEED_JOB_GIT_URL: https://github.com/example/project-seed-job.git
-      CONFIGURE_GLOBAL_LIB: "true"
-      GLOBAL_LIB_NAME: project-lib
-      GLOBAL_LIB_GIT_URL: https://github.com/example/project-lib.git
+      SEED_JOBS: "project-seed|https://github.com/example/project-seed-job.git,other-seed|https://github.com/example/other-seed-job.git"
+      GLOBAL_SHARED_LIBRARIES: "pipeline-lib|https://github.com/example/pipeline-lib.git,project-lib|https://github.com/example/project-lib.git"
+      CREDENTIALS: "UsernamePassword|GITHUB_CREDENTIALS|githubuser|P@55w0rd!|GitHub Credentials,UsernamePassword|DOCKER_HUB_CREDENTIALS|dockeruser:P@55w0rd!|Docker Hub Credentials,SecretText|SLACK_TOKEN|T0k3n|Slack Token"
     ports:
     - "8080:8080"
     volumes:
@@ -73,6 +69,5 @@ services:
 
 ## Improvements
 
-* Automatically approved seed job script.
-* Automatically configure Slack notifier settings with token secret text.
-* Automatically configure Docker Hub credentials.
+* Automatically approve seed job script.
+* Automatically configure Slack notifier settings.

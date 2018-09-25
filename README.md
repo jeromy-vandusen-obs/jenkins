@@ -13,9 +13,12 @@ This is a custom Docker image for Jenkins, based on the latest version of the of
 * ROOT_URL - The root URL for this Jenkins instance (default: http://jenkins:8080/).
 * JENKINS_USER - The name of the administrator user to be created (default: administrator).
 * JENKINS_PASS - The password for the administrator user to be created (default: administrator).
-* GENERATE_SEED_JOB - Whether or not a seed job should be generated (default: true).
-* SEED_JOB_NAME The name of the seed job to be created (default: seed).
-* SEED_JOB_GIT_URL The URL of the Git repository containing the seed job script (default: https://github.com/example/seed).
+* GENERATE_SEED_JOB - Whether or not a seed job should be generated (default: false).
+* SEED_JOB_NAME - The name of the seed job to be created.
+* SEED_JOB_GIT_URL - The URL of the Git repository containing the seed job script.
+* CONFIGURE_GLOBAL_LIB - Whether or not to configure global shared libraries (default: false)
+* GLOBAL_LIB_NAME - The name of the global shared library to configure. For multiple libraries, separate by commas.
+* GLOBAL_LIB_GIT_URL - The URL of the Git repository containing the global shared library. For multiple libraries, separate by commas.
 
 ## Seed Job
 
@@ -30,8 +33,12 @@ $ docker run -d \
              -e ROOT_URL="http://jenkins.example.com" \
              -e JENKINS_USER="admin" \
              -e JENKINS_PASS="secret" \
+             -e GENERATE_SEED_JOB="true" \
              -e SEED_JOB_NAME="project-seed" \
-             -e SED_JOB_GIT_URL="https://github.com/example/project-seed-job.git" \
+             -e SEED_JOB_GIT_URL="https://github.com/example/project-seed-job.git" \
+             -e CONFIGURE_GLOBAL_LIB="true" \
+             -e GLOBAL_LIB_NAME="project-lib" \
+             -e GLOBAL_LIB_GIT_URL="https://github.com/example/project-lib.git" \
              --name jenkins \
              jvandusen/jenkins:latest
 ```
@@ -49,8 +56,12 @@ services:
       ROOT_URL: http://jenkins.example.com
       JENKINS_USER: admin
       JENKINS_PASS: secret
+      GENERATE_SEED_JOB: "true"
       SEED_JOB_NAME: project-seed
       SEED_JOB_GIT_URL: https://github.com/example/project-seed-job.git
+      CONFIGURE_GLOBAL_LIB: "true"
+      GLOBAL_LIB_NAME: project-lib
+      GLOBAL_LIB_GIT_URL: https://github.com/example/project-lib.git
     ports:
     - "8080:8080"
     volumes:
@@ -62,6 +73,5 @@ services:
 ## Improvements
 
 * Automatically approved seed job script.
-* Automatically configure global shared libraries.
 * Automatically configure Slack notifier settings with token secret text.
 * Automatically configure Docker Hub credentials.

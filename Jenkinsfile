@@ -13,7 +13,7 @@ pipeline {
 
     environment {
         IMAGE_NAME = 'jvandusen/jenkins'
-        IMAGE_VERSION = '1.3.0'
+        IMAGE_VERSION = '1.4.0'
     }
     
     stages {

@@ -3,22 +3,24 @@ import jenkins.plugins.git.GitSCMSource
 import org.jenkinsci.plugins.workflow.libs.LibraryConfiguration
 import org.jenkinsci.plugins.workflow.libs.SCMSourceRetriever
 
-def env = System.getenv()
+jenkins = Jenkins.instance
 
-if (env.CONFIGURE_GLOBAL_LIB == 'true') {
-    jenkins = Jenkins.instance
-    def globalLibraries = jenkins.getDescriptor('org.jenkinsci.plugins.workflow.libs.GlobalLibraries')
-    List libraryConfigurations = []
+String globalSharedLibraries = System.getenv().GLOBAL_SHARED_LIBRARIES
 
-    names = env.GLOBAL_LIB_NAME.tokenize(',')
-    gitUrls = env.GLOBAL_LIB_GIT_URL.tokenize(',')
-    for (i = 0; i < names.size(); i ++) {
-        GitSCMSource gitSCMSource = new GitSCMSource(gitUrls.get(i))
+if (globalSharedLibraries != null && globalSharedLibraries.trim() != '') {
+    libraryConfigurations = []
+
+    globalSharedLibraries.tokenize(',').each{ entry ->
+        List<String> tokens = entry.tokenize('|')
+        name = tokens.getAt(0)
+        url = tokens.getAt(1)
+
+        GitSCMSource gitSCMSource = new GitSCMSource(url)
         SCMSourceRetriever scmSourceRetriever = new SCMSourceRetriever(gitSCMSource)
-        LibraryConfiguration libraryConfiguration = new LibraryConfiguration(names.get(i), scmSourceRetriever)
+        LibraryConfiguration libraryConfiguration = new LibraryConfiguration(name, scmSourceRetriever)
         libraryConfigurations << libraryConfiguration
     }
 
-    globalLibraries.get().setLibraries(libraryConfigurations)
+    jenkins.getDescriptor('org.jenkinsci.plugins.workflow.libs.GlobalLibraries').get().setLibraries(libraryConfigurations)
     jenkins.save()
 }

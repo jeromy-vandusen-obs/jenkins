@@ -6,7 +6,8 @@ This is a custom Docker image for Jenkins, based on the latest version of the of
 * Docker CLI and Docker Compose are installed, so that Jenkins pipelines can be used to build and maintain Docker images.
 * pre-initialized with a predetermined set of useful plugins.
 * administrator user is created, with the option to customize this user through environment variables (see below).
-* seed job created that uses the Job DSL plugin, which is installed, to automatically create jobs for your project.
+* seed job created that uses the Job DSL plugin to automatically create jobs for your project.
+* global shared libraries configured and ready for use in your pipeline jobs.
 
 ## Environment Variables
 

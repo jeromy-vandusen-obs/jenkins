@@ -6,21 +6,28 @@ import javaposse.jobdsl.plugin.*
 
 jenkins = Jenkins.instance
 
-def env = System.getenv()
+String seedJobs = System.getenv().SEED_JOBS
 
-if (env.GENERATE_SEED_JOB == 'true' && ! jenkins.getJobNames().contains(env.SEED_JOB_NAME)) {
-    job = jenkins.createProject(FreeStyleProject, env.SEED_JOB_NAME)
-    job.displayName = env.SEED_JOB_NAME
-    job.scm = new GitSCM(env.SEED_JOB_GIT_URL)
-    job.scm.branches = [new BranchSpec('*/master')]
+if (seedJobs != null && seedJobs.trim() != '') {
+    seedJobs.tokenize(',').each { entry ->
+        List<String> tokens = entry.tokenize('|')
+        name = tokens.getAt(0)
+        url = tokens.getAt(1)
 
-    builder = new ExecuteDslScripts()
-    builder.setTargets('seedJobs.groovy')
-    builder.setIgnoreExisting(false)
-    builder.setRemovedJobAction(RemovedJobAction.DELETE)
-    builder.setRemovedViewAction(RemovedViewAction.DELETE)
-    builder.setLookupStrategy(LookupStrategy.JENKINS_ROOT)
+        if (! jenkins.getJobNames().contains(name)) {
+            job = jenkins.createProject(FreeStyleProject, name)
+            job.scm = new GitSCM(url)
+            job.scm.branches = [new BranchSpec('*/master')]
 
-    job.buildersList.add(builder)
-    job.save()
+            builder = new ExecuteDslScripts()
+            builder.setTargets('seedJobs.groovy')
+            builder.setIgnoreExisting(false)
+            builder.setRemovedJobAction(RemovedJobAction.DELETE)
+            builder.setRemovedViewAction(RemovedViewAction.DELETE)
+            builder.setLookupStrategy(LookupStrategy.JENKINS_ROOT)
+
+            job.buildersList.add(builder)
+            job.save()
+        }
+    }
 }

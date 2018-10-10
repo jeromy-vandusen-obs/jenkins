@@ -19,6 +19,7 @@ pipeline {
     stages {
         stage('Build Image') {
             steps {
+                sh "docker pull jenkins/jenkins:lts-alpine"
                 sh "docker build -t $IMAGE_NAME:$IMAGE_VERSION -t $IMAGE_NAME:latest ."
             }
         }

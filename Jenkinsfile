@@ -7,16 +7,23 @@ pipeline {
         timeout(time: 15, unit: 'MINUTES')
     }
 
-    triggers {
-        pollSCM('H/5 * * * 1-5')
-    }
-
     environment {
         IMAGE_NAME = 'jvandusen/jenkins'
         IMAGE_VERSION = '1.5.0'
     }
     
     stages {
+        stage('Configure Build Trigger') {
+            steps {
+                script {
+                    properties([
+                        pipelineTriggers([
+                            [$class: 'GitHubPushTrigger']
+                        ])
+                    ])
+                }
+            }
+        }
         stage('Build Image') {
             steps {
                 sh "docker pull jenkins/jenkins:lts-alpine"

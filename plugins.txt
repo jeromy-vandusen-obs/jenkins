@@ -2,6 +2,7 @@ ace-editor
 ant
 antisamy-markup-formatter
 apache-httpcomponents-client-4-api
+audit-trail
 authentication-tokens
 bouncycastle-api
 branch-api
@@ -15,6 +16,7 @@ docker-commons
 docker-workflow
 durable-task
 email-ext
+embeddable-build-status
 git
 git-client
 github
@@ -50,6 +52,7 @@ pipeline-stage-step
 pipeline-stage-tags-metadata
 pipeline-stage-view
 plain-credentials
+promoted-build
 resource-disposer
 scm-api
 script-security

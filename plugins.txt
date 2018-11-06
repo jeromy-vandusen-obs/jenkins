@@ -52,7 +52,7 @@ pipeline-stage-step
 pipeline-stage-tags-metadata
 pipeline-stage-view
 plain-credentials
-promoted-build
+promoted-builds
 resource-disposer
 scm-api
 script-security
